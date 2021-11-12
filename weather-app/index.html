@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <form action="" id="formSub">
+        <input
+          id="search"
+          type="text"
+          placeholder="Enter Location..."
+          style="color: gray"
+        />
+        <button id="sub">Search</button>
+      </form>
+      <div class="output">
+        <div id="errorMessage" style="color: red; font-size: 20px"></div>
+
+        <p id="img"></p>
+        <h1 id="locationName"></h1>
+        <h1
+          id="displayTemp"
+          style="font-size: 80px; margin: 1rem 0; color: white"
+        ></h1>
+        <p id="weatherText" style="font-size: 20px"></p>
+      </div>
+    </div>
+    <script>
+      let form = document.getElementById("formSub");
+      form.addEventListener("submit", (e) => {
+        let search = document.getElementById("search").value;
+        e.preventDefault();
+        weather.weatherApi(search);
+        document.getElementById("search").value = "";
+      });
+
+      let weather = {
+        apiKey: "d5566ca14cfe43098f7175823210911",
+        weatherApi: function (city) {
+          fetch(
+            "http://api.weatherapi.com/v1/current.json?key=" +
+              this.apiKey +
+              "&q=" +
+              city +
+              "&aqi=yes"
+          )
+            .then((res) => res.json())
+            .then((data) => displayData(data))
+            .catch((err) => {
+              document.getElementById("errorMessage").innerHTML =
+                "oops....you enter wrong location. please enter a valid location and try again";
+            });
+        },
+      };
+
+      function displayData(data) {
+        let displayTemp = document.getElementById("displayTemp");
+        let locationName = document.getElementById("locationName");
+        let img = document.getElementById("img");
+        let weatherText = document.getElementById("weatherText");
+        let icon = data.current.condition.icon;
+        // displayTemp.innerHTML = temp;
+        let location_name = data.location.name;
+        let display_temp = data.current.temp_c;
+        let weather_text = data.current.condition.text;
+        locationName.innerHTML = location_name;
+        img.innerHTML = `<img src="http://${icon}" alt="" />`;
+        displayTemp.innerHTML = `${display_temp}°C`;
+        weatherText.innerHTML = weather_text;
+
+        // console.log(temp);
+      }
+    </script>
+  </body>
+</html>
