@@ -33,6 +33,10 @@
               displayUsers.appendChild(para);
               //   link(users);
             }
+            let displaySpecificUserData = document.getElementById(
+              "displaySpecificUserData"
+            );
+            displaySpecificUserData.innerHTML = "";
             // fetchUsers(users);
           });
       }
@@ -43,6 +47,7 @@
             let displaySpecificUserData = document.getElementById(
               "displaySpecificUserData"
             );
+
             displaySpecificUserData.innerHTML = `<h1>username: ${data.username}</h1>
                                                 email: <h3>${data.email}</h3>
                                                 phone: <p>${data.phone}</p>`;
