@@ -93,6 +93,6 @@ body {
   cursor: pointer;
 }
 #searchSong:hover {
-  background-color: royalblue;
+  background-color: #ff9a37;
   color: #ddd;
 }
