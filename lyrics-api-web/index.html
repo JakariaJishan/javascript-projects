@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Lyrics World</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="h1container">Welcome to LYRICS WORLD</h1>
+      <div>
+        <input
+          type="text"
+          id="userInput"
+          placeholder="enter songs name/title"
+        /><button id="searchSong">search</button>
+      </div>
+      <div class="songsOutput" id="songsOutput">
+        <div id="artistTitle"></div>
+        <div id="lyrics"></div>
+      </div>
+    </div>
+
+    <script>
+      function fetchData(userInput) {
+        fetch(`https://api.lyrics.ovh/suggest/${userInput}`)
+          .then((res) => res.json())
+          .then((data) => {
+            let showingData = data.data.slice(0, 10);
+            let artistTitle = document.getElementById("artistTitle");
+            artistTitle.innerHTML = "";
+            let x = document.getElementById("lyrics");
+            x.innerHTML = "";
+            for (let i = 0; i < showingData.length; i++) {
+              const element = showingData[i];
+
+              let artistTitle = document.getElementById("artistTitle");
+
+              let createArtistTitle = document.createElement("div");
+              createArtistTitle.innerHTML = `<div class="songsBody">
+                                            <div class="styleTitle"><h1>${element.title}</h1>
+                                            <h3>${element.artist.name}</h3>
+                                            </div>
+                                            <div >
+                                            <button class="styleButton" onclick="buttonClick('${element.title}', '${element.artist.name}'
+                                            )">Lyrics</button>
+                                            <a class="linkButton" href ="${element.link}" target="_blank">Track</a>
+                                            </div>
+                                            </div>`;
+              artistTitle.appendChild(createArtistTitle);
+
+              // displayData(element.title, element.artist.name, element.id);
+            }
+          });
+      }
+      function buttonClick(title, artist) {
+        // console.log(userId, title);
+        // console.log(title);
+        // console.log(artist);
+        let x = document.getElementById("lyrics");
+        x.innerHTML = "";
+
+        fetch(`https://api.lyrics.ovh/v1/${artist}/${title}`)
+          .then((res) => res.json())
+          .then((data) => {
+            // console.log(data.lyrics);
+            if (data.lyrics) {
+              let x = document.getElementById("lyrics");
+              let y = document.createElement("p");
+              y.className = "displayLyricsArea";
+              y.innerText = data.lyrics;
+              x.appendChild(y);
+              // console.log(data.lyrics); //now i will edit this things..
+            } else {
+              document.getElementById(
+                "lyrics"
+              ).innerHTML = `<div class="displayLyricsArea">lyrics not found!</div>`;
+
+              // console.log("lyrics not found!");
+            }
+          });
+      }
+
+      function displaySongs() {
+        let searchSong = document.getElementById("searchSong");
+        searchSong.addEventListener("click", () => {
+          let userInput = document.getElementById("userInput").value;
+          // console.log(userInput);
+          fetchData(userInput);
+        });
+      }
+      displaySongs();
+    </script>
+  </body>
+</html>
